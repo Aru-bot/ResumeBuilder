@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Resume Builder</title>
+  <style>
+    /* Reset and base styles */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background: #f4f7f8;
+      color: #333;
+      line-height: 1.6;
+    }
+    header {
+      background: #007acc;
+      color: white;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    main {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      gap: 2rem;
+    }
+    /* Form section styles */
+    section.form-section {
+      flex: 1 1 400px;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    h2 {
+      margin-bottom: 1rem;
+      color: #007acc;
+      font-weight: 700;
+      border-bottom: 2px solid #007acc;
+      padding-bottom: 0.3rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-weight: 600;
+      margin-top: 1rem;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.3s ease;
+    }
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="tel"]:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #007acc;
+      outline: none;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+    button {
+      margin-top: 1rem;
+      background-color: #007acc;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #005fa3;
+    }
+    /* Resume preview styles */
+    section.preview-section {
+      flex: 1 1 450px;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow-y: auto;
+      max-height: 90vh;
+    }
+    /* Container for the resume inside preview */
+    #resume-preview {
+      font-family: 'Georgia', serif;
+      color: #222;
+    }
+    #resume-preview h1,
+    #resume-preview h3,
+    #resume-preview h4 {
+      margin: 0;
+    }
+    #resume-preview h1 {
+      font-size: 2rem;
+      font-weight: 900;
+      border-bottom: 3px solid #007acc;
+      padding-bottom: 0.3rem;
+      margin-bottom: 0.5rem;
+    }
+    #resume-preview h3 {
+      font-size: 1.2rem;
+      color: #007acc;
+      margin-top: 1.2rem;
+      margin-bottom: 0.4rem;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 0.2rem;
+    }
+    #resume-preview p, 
+    #resume-preview ul {
+      margin: 0.2rem 0 0.8rem 0;
+      font-size: 1rem;
+    }
+    #resume-preview ul {
+      padding-left: 1.2rem;
+    }
+    /* Experience & Education items */
+    .job,
+    .education-item {
+      margin-bottom: 1rem;
+    }
+    /* Skill badges */
+    #skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .skill-badge {
+      background-color: #007acc;
+      color: white;
+      padding: 0.3rem 0.7rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      user-select: none;
+    }
+    /* Add entry buttons */
+    .add-btn {
+      background-color: #28a745;
+      margin-top: 0.5rem;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 0.4rem 1rem;
+    }
+    .add-btn:hover {
+      background-color: #1e7e34;
+    }
+    /* Responsive */
+    @media (max-width: 900px) {
+      main {
+        flex-direction: column;
+      }
+      section.form-section, section.preview-section {
+        max-height: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    Resume Builder
+  </header>
+  <main>
+    <section class="form-section" aria-label="Resume input form">
+      <h2>Personal Information</h2>
+      <label for="fullName">Full Name</label>
+      <input type="text" id="fullName" placeholder="John Doe" />
+
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="john.doe@example.com" />
+
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" placeholder="+1 234 567 890" />
+
+      <label for="address">Address</label>
+      <textarea id="address" placeholder="123 Main Street, City, Country"></textarea>
+
+      <h2>Education</h2>
+      <div id="education-container">
+        <!-- Dynamic education entries will appear here -->
+      </div>
+      <button type="button" class="add-btn" id="add-education-btn">+ Add Education</button>
+
+      <h2>Work Experience</h2>
+      <div id="experience-container">
+        <!-- Dynamic experience entries will appear here -->
+      </div>
+      <button type="button" class="add-btn" id="add-experience-btn">+ Add Experience</button>
+
+      <h2>Skills</h2>
+      <label for="skill-input">Add a Skill</label>
+      <input type="text" id="skill-input" placeholder="Type a skill and press Enter" />
+      <div id="skills-container"></div>
+    </section>
+
+    <section class="preview-section" aria-label="Resume preview">
+      <h2>Resume Preview</h2>
+      <div id="resume-preview" tabindex="0" aria-live="polite" aria-atomic="true" aria-relevant="all">
+        <!-- Resume preview content will be dynamically filled here -->
+        <p>Fill the form to see your resume preview here.</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Main JavaScript to handle the Resume Builder functionality
+
+    // Elements references
+    const fullNameInput = document.getElementById('fullName');
+    const emailInput = document.getElementById('email');
+    const phoneInput = document.getElementById('phone');
+    const addressInput = document.getElementById('address');
+
+    const educationContainer = document.getElementById('education-container');
+    const addEducationBtn = document.getElementById('add-education-btn');
+
+    const experienceContainer = document.getElementById('experience-container');
+    const addExperienceBtn = document.getElementById('add-experience-btn');
+
+    const skillInput = document.getElementById('skill-input');
+    const skillsContainer = document.getElementById('skills-container');
+
+    const resumePreview = document.getElementById('resume-preview');
+
+    // Data model for the resume
+    let resumeData = {
+      personal: {
+        fullName: '',
+        email: '',
+        phone: '',
+        address: ''
+      },
+      education: [],
+      experience: [],
+      skills: []
+    };
+
+    // Utility function to create an input element with label for education and experience entries
+    function createInput(labelText, type = 'text', placeholder = '', value = '') {
+      const label = document.createElement('label');
+      label.textContent = labelText;
+      const input = document.createElement('input');
+      input.type = type;
+      input.placeholder = placeholder;
+      input.value = value;
+      input.required = true;
+      label.appendChild(input);
+      return { label, input };
+    }
+
+    // Create a textarea with label for description fields
+    function createTextarea(labelText, placeholder = '', value = '') {
+      const label = document.createElement('label');
+      label.textContent = labelText;
+      const textarea = document.createElement('textarea');
+      textarea.placeholder = placeholder;
+      textarea.value = value;
+      textarea.required = true;
+      label.appendChild(textarea);
+      return { label, textarea };
+    }
+
+    // Create a date input with label for start/end dates
+    function createDateInput(labelText, value = '') {
+      const label = document.createElement('label');
+      label.textContent = labelText;
+      const input = document.createElement('input');
+      input.type = 'month';
+      input.value = value;
+      input.required = true;
+      label.appendChild(input);
+      return { label, input };
+    }
+
+    // Function to add an education entry form group
+    function addEducationEntry(data = {}) {
+      // Container for one education record
+      const eduDiv = document.createElement('div');
+      eduDiv.className = 'education-entry';
+      eduDiv.style.borderBottom = '1px solid #ccc';
+      eduDiv.style.paddingBottom = '0.8rem';
+      eduDiv.style.marginBottom = '0.8rem';
+
+      // School name input
+      const { label: schoolLabel, input: schoolInput } = createInput('School/Institution', 'text', 'University of XYZ', data.school || '');
+      eduDiv.appendChild(schoolLabel);
+
+      // Degree input
+      const { label: degreeLabel, input: degreeInput } = createInput('Degree', 'text', 'Bachelor of Science in ...', data.degree || '');
+      eduDiv.appendChild(degreeLabel);
+
+      // Field of study input
+      const { label: fieldLabel, input: fieldInput } = createInput('Field of Study', 'text', 'Computer Science', data.field || '');
+      eduDiv.appendChild(fieldLabel);
+
+      // Start and end date inputs side by side
+      const datesDiv = document.createElement('div');
+      datesDiv.style.display = 'flex';
+      datesDiv.style.gap = '1rem';
+
+      const { label: startLabel, input: startInput } = createDateInput('Start Date', data.startDate || '');
+      const { label: endLabel, input: endInput } = createDateInput('End Date', data.endDate || '');
+
+      // Style labels to flex:1 for alignment
+      startLabel.style.flex = '1';
+      endLabel.style.flex = '1';
+
+      datesDiv.appendChild(startLabel);
+      datesDiv.appendChild(endLabel);
+      eduDiv.appendChild(datesDiv);
+
+      // Description textarea
+      const { label: descLabel, textarea: descTextarea } = createTextarea('Description', 'Brief description of your studies, achievements, etc.', data.description || '');
+      eduDiv.appendChild(descLabel);
+
+      // Remove button to remove this education entry
+      const removeBtn = document.createElement('button');
+      removeBtn.type = 'button';
+      removeBtn.textContent = 'Remove Education';
+      removeBtn.style.backgroundColor = '#dc3545';
+      removeBtn.style.marginTop = '0.5rem';
+      removeBtn.style.fontWeight = '700';
+      removeBtn.style.fontSize = '0.9rem';
+      removeBtn.style.padding = '0.4rem 1rem';
+      removeBtn.style.border = 'none';
+      removeBtn.style.color = 'white';
+      removeBtn.style.borderRadius = '4px';
+      removeBtn.style.cursor = 'pointer';
+
+      removeBtn.addEventListener('click', () => {
+        eduDiv.remove();
+        updateResumeData();
+      });
+
+      removeBtn.addEventListener('mouseenter', () => {
+        removeBtn.style.backgroundColor = '#b02a37';
+      });
+      removeBtn.addEventListener('mouseleave', () => {
+        removeBtn.style.backgroundColor = '#dc3545';
+      });
+
+      eduDiv.appendChild(removeBtn);
+
+      // Append this education entry to container
+      educationContainer.appendChild(eduDiv);
+
+      // Add input event listeners to update data on change
+      [schoolInput, degreeInput, fieldInput, startInput, endInput, descTextarea].forEach(inp => {
+        inp.addEventListener('input', updateResumeData);
+      });
+    }
+
+    // Function to add a work experience entry form group
+    function addExperienceEntry(data = {}) {
+      // Container for one experience record
+      const expDiv = document.createElement('div');
+      expDiv.className = 'experience-entry';
+      expDiv.style.borderBottom = '1px solid #ccc';
+      expDiv.style.paddingBottom = '0.8rem';
+      expDiv.style.marginBottom = '0.8rem';
+
+      // Job title input
+      const { label: jobTitleLabel, input: jobTitleInput } = createInput('Job Title', 'text', 'Software Engineer', data.jobTitle || '');
+      expDiv.appendChild(jobTitleLabel);
+
+      // Company name input
+      const { label: companyLabel, input: companyInput } = createInput('Company', 'text', 'Company Inc.', data.company || '');
+      expDiv.appendChild(companyLabel);
+
+      // Start and end date inputs side by side
+      const datesDiv = document.createElement('div');
+      datesDiv.style.display = 'flex';
+      datesDiv.style.gap = '1rem';
+
+      const { label: startLabel, input: startInput } = createDateInput('Start Date', data.startDate || '');
+      const { label: endLabel, input: endInput } = createDateInput('End Date', data.endDate || '');
+
+      startLabel.style.flex = '1';
+      endLabel.style.flex = '1';
+
+      datesDiv.appendChild(startLabel);
+      datesDiv.appendChild(endLabel);
+      expDiv.appendChild(datesDiv);
+
+      // Description textarea
+      const { label: descLabel, textarea: descTextarea } = createTextarea('Description', 'Briefly describe your role and achievements', data.description || '');
+      expDiv.appendChild(descLabel);
+
+      // Remove button to remove this experience entry
+      const removeBtn = document.createElement('button');
+      removeBtn.type = 'button';
+      removeBtn.textContent = 'Remove Experience';
+      removeBtn.style.backgroundColor = '#dc3545';
+      removeBtn.style.marginTop = '0.5rem';
+      removeBtn.style.fontWeight = '700';
+      removeBtn.style.fontSize = '0.9rem';
+      removeBtn.style.padding = '0.4rem 1rem';
+      removeBtn.style.border = 'none';
+      removeBtn.style.color = 'white';
+      removeBtn.style.borderRadius = '4px';
+      removeBtn.style.cursor = 'pointer';
+
+      removeBtn.addEventListener('click', () => {
+        expDiv.remove();
+        updateResumeData();
+      });
+      removeBtn.addEventListener('mouseenter', () => {
+        removeBtn.style.backgroundColor = '#b02a37';
+      });
+      removeBtn.addEventListener('mouseleave', () => {
+        removeBtn.style.backgroundColor = '#dc3545';
+      });
+
+      expDiv.appendChild(removeBtn);
+
+      experienceContainer.appendChild(expDiv);
+
+      // Add input event listeners to update data on change
+      [jobTitleInput, companyInput, startInput, endInput, descTextarea].forEach(inp => {
+        inp.addEventListener('input', updateResumeData);
+      });
+    }
+
+    // Function to add skill pill/badge
+    function addSkill(skill) {
+      if (!skill.trim()) return;
+      if (resumeData.skills.includes(skill.trim())) return; // no duplicates
+      resumeData.skills.push(skill.trim());
+      renderSkills();
+      updateResumePreview();
+    }
+
+    // Function to render skill badges in form and add remove capability
+    function renderSkills() {
+      // Clear container
+      skillsContainer.innerHTML = '';
+
+      resumeData.skills.forEach((skill, index) => {
+        const skillBadge = document.createElement('span');
+        skillBadge.className = 'skill-badge';
+        skillBadge.textContent = skill;
+
+        // Add small "x" button to remove skill
+        const removeBtn = document.createElement('button');
+        removeBtn.textContent = '×';
+        removeBtn.setAttribute('aria-label', `Remove skill ${skill}`);
+        removeBtn.style.marginLeft = '0.5rem';
+        removeBtn.style.background = 'transparent';
+        removeBtn.style.border = 'none';
+        removeBtn.style.color = 'white';
+        removeBtn.style.fontWeight = '700';
+        removeBtn.style.cursor = 'pointer';
+        removeBtn.style.fontSize = '0.9rem';
+        removeBtn.style.lineHeight = '1';
+        removeBtn.style.padding = '0 3px';
+
+        removeBtn.addEventListener('click', () => {
+          resumeData.skills.splice(index, 1);
+          renderSkills();
+          updateResumePreview();
+        });
+
+        skillBadge.appendChild(removeBtn);
+        skillsContainer.appendChild(skillBadge);
+      });
+    }
+
+    // Function to update data from dynamic form inputs
+    function updateResumeData() {
+      // Update personal info
+      resumeData.personal.fullName = fullNameInput.value.trim();
+      resumeData.personal.email = emailInput.value.trim();
+      resumeData.personal.phone = phoneInput.value.trim();
+      resumeData.personal.address = addressInput.value.trim();
+
+      // Update education data from form inputs
+      resumeData.education = [];
+      const eduEntries = educationContainer.querySelectorAll('.education-entry');
+      eduEntries.forEach(entry => {
+        const inputs = entry.querySelectorAll('input, textarea');
+        const eduObj = {
+          school: '',
+          degree: '',
+          field: '',
+          startDate: '',
+          endDate: '',
+          description: ''
+        };
+        inputs.forEach(input => {
+          const label = input.parentElement.textContent.toLowerCase();
+          if (label.includes('school')) eduObj.school = input.value.trim();
+          else if (label.includes('degree')) eduObj.degree = input.value.trim();
+          else if (label.includes('field')) eduObj.field = input.value.trim();
+          else if (label.includes('start')) eduObj.startDate = input.value;
+          else if (label.includes('end')) eduObj.endDate = input.value;
+          else if (input.tagName.toLowerCase() === 'textarea') eduObj.description = input.value.trim();
+        });
+        // Only push if at least school and degree provided
+        if(eduObj.school || eduObj.degree) {
+          resumeData.education.push(eduObj);
+        }
+      });
+
+      // Update experience data from form inputs
+      resumeData.experience = [];
+      const expEntries = experienceContainer.querySelectorAll('.experience-entry');
+      expEntries.forEach(entry => {
+        const inputs = entry.querySelectorAll('input, textarea');
+        const expObj = {
+          jobTitle: '',
+          company: '',
+          startDate: '',
+          endDate: '',
+          description: ''
+        };
+        inputs.forEach(input => {
+          const label = input.parentElement.textContent.toLowerCase();
+          if (label.includes('job title')) expObj.jobTitle = input.value.trim();
+          else if (label.includes('company')) expObj.company = input.value.trim();
+          else if (label.includes('start')) expObj.startDate = input.value;
+          else if (label.includes('end')) expObj.endDate = input.value;
+          else if (input.tagName.toLowerCase() === 'textarea') expObj.description = input.value.trim();
+        });
+        if(expObj.jobTitle || expObj.company) {
+          resumeData.experience.push(expObj);
+        }
+      });
+
+      // Update the preview with the latest data
+      updateResumePreview();
+    }
+
+    // Format date string from "YYYY-MM" to "MMM YYYY" or empty string if invalid
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      const [year, month] = dateStr.split('-');
+      if (!year || !month) return '';
+      const date = new Date(year, month - 1);
+      const options = { year: 'numeric', month: 'short' };
+      return date.toLocaleDateString(undefined, options);
+    }
+
+    // Build the resume preview markup and inject into #resume-preview div
+    function updateResumePreview() {
+      // If no personal name filled yet, show prompt
+      if(!resumeData.personal.fullName){
+        resumePreview.innerHTML = '<p>Fill the form to see your resume preview here.</p>';
+        return;
+      }
+
+      // Personal information section
+      let html = `<h1>${resumeData.personal.fullName}</h1>`;
+
+      // Contact info - email, phone, address
+      let contactParts = [];
+      if (resumeData.personal.email)
+        contactParts.push(`<a href="mailto:${resumeData.personal.email}">${resumeData.personal.email}</a>`);
+      if (resumeData.personal.phone)
+        contactParts.push(`<a href="tel:${resumeData.personal.phone}">${resumeData.personal.phone}</a>`);
+      if (resumeData.personal.address)
+        contactParts.push(resumeData.personal.address.replace(/\n/g, '<br>'));
+
+      if (contactParts.length > 0) {
+        html += `<p>${contactParts.join(' | ')}</p>`;
+      }
+
+      // Education Section
+      if (resumeData.education.length > 0) {
+        html += `<h3>Education</h3>`;
+        resumeData.education.forEach(edu => {
+          html += `<div class="education-item">`;
+          html += `<strong>${edu.degree || ''}${edu.degree && edu.field ? ', ' : ''}${edu.field || ''}</strong><br>`;
+          html += `${edu.school || ''}<br>`;
+          html += `<small>${formatDate(edu.startDate)} - ${formatDate(edu.endDate) || 'Present'}</small>`;
+          if (edu.description) {
+            html += `<p>${edu.description}</p>`;
+          }
+          html += `</div>`;
+        });
+      }
+
+      // Experience Section
+      if (resumeData.experience.length > 0) {
+        html += `<h3>Work Experience</h3>`;
+        resumeData.experience.forEach(exp => {
+          html += `<div class="job">`;
+          html += `<strong>${exp.jobTitle || ''}</strong><br>`;
+          html += `${exp.company || ''}<br>`;
+          html += `<small>${formatDate(exp.startDate)} - ${formatDate(exp.endDate) || 'Present'}</small>`;
+          if (exp.description) {
+            html += `<p>${exp.description}</p>`;
+          }
+          html += `</div>`;
+        });
+      }
+
+      // Skills Section
+      if (resumeData.skills.length > 0) {
+        html += `<h3>Skills</h3><ul id="skills-list">`;
+        resumeData.skills.forEach(skill => {
+          html += `<li>${skill}</li>`;
+        });
+        html += `</ul>`;
+      }
+
+      // Set generated html inside preview container
+      resumePreview.innerHTML = html;
+    }
+
+    // Initialize form with one education and one experience entry for convenience
+    function initializeForm() {
+      addEducationEntry();
+      addExperienceEntry();
+    }
+
+    // Event listeners setup
+
+    // Personal info inputs update preview on input
+    [fullNameInput, emailInput, phoneInput, addressInput].forEach(input => {
+      input.addEventListener('input', updateResumeData);
+    });
+
+    // Button to add new education entry
+    addEducationBtn.addEventListener('click', () => {
+      addEducationEntry();
+    });
+
+    // Button to add new experience entry
+    addExperienceBtn.addEventListener('click', () => {
+      addExperienceEntry();
+    });
+
+    // Skill input: add skill on Enter key press
+    skillInput.addEventListener('keydown', e => {
+      if(e.key === 'Enter'){
+        e.preventDefault();
+        if(skillInput.value.trim() !== '') {
+          addSkill(skillInput.value.trim());
+          skillInput.value = '';
+        }
+      }
+    });
+
+    // Update preview and data from dynamic entries
+    // This is called on input events inside dynamic sections
+
+    // Initialize the form with default entries
+    initializeForm();
+
+    // Initial update of preview
+    updateResumeData();
+  </script>
+</body>
+</html>
+
